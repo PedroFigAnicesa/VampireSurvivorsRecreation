@@ -1,22 +1,28 @@
+
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float lifetime = 3f; // Tempo em segundos para a bala sumir
+    public float lifetime = 3f;
+    public int damage = 1;
 
     void Start()
     {
-        // Destroi a bala automaticamente após o tempo limite
         Destroy(gameObject, lifetime);
     }
 
-    // Opcional: Destruir ao bater em algo
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Se bater em algo que não seja o player, se destrói
-        if (!collision.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
+            return;
+
+        EnemyHealth enemy = collision.GetComponent<EnemyHealth>();
+
+        if (enemy != null)
         {
-            Destroy(gameObject);
+            enemy.TakeDamage(damage);
         }
+
+        Destroy(gameObject);
     }
 }
